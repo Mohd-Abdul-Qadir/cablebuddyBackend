@@ -3,91 +3,78 @@ const mongoose = require("mongoose");
 const customerSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
   },
-  billing: {
+  billingName: {
     type: String,
   },
-  area: {
+  billingArea: {
     type: String,
-    required: true,
-    unique: true,
   },
-  no: {
+  billingNo: {
     type: String,
-    required: true,
   },
-  product: {
+  mobileNo1: {
     type: String,
-    required: true,
   },
-  number1: {
+  mobileNo2: {
     type: String,
-    required: true,
-  },
-  number2: {
-    type: String,
-    required: true,
   },
   email: {
     type: String,
-    required: true,
   },
-  deposit: {
+  securityDeposit: {
     type: String,
-    required: true,
   },
   address: {
     type: String,
-    required: true,
   },
-  gst: {
+  gstNo: {
     type: String,
-    required: true,
+  },
+  customerCode: {
+    type: String,
   },
   remark: {
     type: String,
-    required: true,
   },
   stbName: {
     type: String,
-    required: true,
   },
   stbNumber: {
     type: String,
-    required: true,
   },
   cardNumber: {
     type: String,
-    required: true,
   },
-  membership: {
+  membershipNo: {
     type: String,
-    required: true,
   },
   startDate: {
     type: String,
-    required: true,
   },
-  balance: {
+  openingBalanceRadio: {
     type: String,
-    required: true,
   },
-  AdditionalCharg: {
+  openingBalanceAmount: {
     type: String,
-    required: true,
   },
-  billDuration: {
+  additionalChargeDiscount: {
     type: String,
-    required: true,
   },
-  billType: {
+  additionalChargeRadio: {
     type: String,
-    required: true,
   },
-  gstType: {
+  billDurationRadio: {
     type: String,
-    required: true,
+  },
+  billDurationSelect: {
+    type: String,
+  },
+  billTypeRadio: {
+    type: String,
+  },
+  gstTypeRadio: {
+    type: String,
   },
 });
 
