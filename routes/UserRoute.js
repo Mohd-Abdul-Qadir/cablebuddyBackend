@@ -368,5 +368,14 @@ router.post("/add-customer", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+router.get("/customers", async (req, res) => {
+  try {
+    const customers = await Customer.find(); // retrieve all products from the database
+    res.status(200).json(customers); // send the retrieved products as JSON response
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
 module.exports = router;
