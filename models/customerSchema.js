@@ -76,6 +76,9 @@ const customerSchema = new mongoose.Schema({
   gstTypeRadio: {
     type: String,
   },
+  // userId: {
+  //   type: String,
+  // },
 });
 
 const Customer = mongoose.model("Customer", customerSchema);
