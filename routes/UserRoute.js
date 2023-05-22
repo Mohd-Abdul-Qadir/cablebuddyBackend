@@ -10,11 +10,12 @@ const router = express.Router();
 const fs = require("fs");
 const csv = require("fast-csv");
 const multer = require("multer");
-const json2xls = require('json2xls');
- const exceljs =require('exceljs')
+const json2xls = require("json2xls");
+const exceljs = require("exceljs");
 // for parsing application/json
 require("../config/db");
 const auth = require("../middlware/auth");
+const verifyToken = require("../middlware/auth");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -25,8 +26,6 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage: storage });
-
-
 
 router.post("/register", async (req, res) => {
   const {
@@ -104,7 +103,16 @@ router.post("/register", async (req, res) => {
   try {
     // Save the user to the database
     const savedUser = await user.save();
-    res.send(savedUser);
+    const payload = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    };
+
+    jwt.sign(payload, config.secret, { expiresIn: "7h" }, (err, token) => {
+      if (err) throw err;
+      res.json({ message: "Login successful", token, ...savedUser });
+    });
   } catch (err) {
     res.status(400).send(err);
   }
@@ -177,6 +185,8 @@ router.post("/login", async (req, res) => {
 
     const payload = {
       id: user.id,
+      name: user.name,
+      email: user.email,
     };
 
     jwt.sign(payload, config.secret, { expiresIn: "7h" }, (err, token) => {
@@ -190,18 +200,15 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post("/add-product", async (req, res) => {
-  const { name, price, select, gst, product, additional, hsn, genre, type } =
-    req.body;
-  // const { authorization } = req.headers;
-  // const user = jwt.verify(authorization, config.secret);
-  // console.log(user, "USER");
-  // if (!user) {
-  //   return res.json({
-  //     message: "Unauthorized request",
-  //   });
-  // }
+router.post("/add-product", verifyToken, async (req, res) => {
   try {
+    const { name, price, select, gst, product, additional, hsn, genre, type } =
+      req.body;
+    if (!req.user) {
+      return res.json({
+        message: "Unauthorized request",
+      });
+    }
     const newproduct = new Product({
       name,
       price,
@@ -212,7 +219,7 @@ router.post("/add-product", async (req, res) => {
       hsn,
       genre,
       type,
-      // userId: user.id,
+      userId: req.user.id,
     });
 
     await newproduct.save(); // save the new product to the database
@@ -238,10 +245,10 @@ router.delete("/delete-products/:id", async (req, res) => {
   }
 });
 
-router.get("/products", async (req, res) => {
+router.get("/products", verifyToken, async (req, res) => {
   try {
-    // const id = req.user.id; 
-    const products = await Product.find(); // retrieve all products from the database
+    const id = req.user.id;
+    const products = await Product.find({ userId: id }); // retrieve all products from the database
     res.status(200).json(products); // send the retrieved products as JSON response
   } catch (error) {
     console.error(error);
@@ -298,45 +305,42 @@ router.put("/update-product/:id", async (req, res) => {
   }
 });
 
-router.post("/add-customer", async (req, res) => {
-  const {
-    name,
-    billingName,
-    billingArea,
-    billingNo,
-    mobileNo1,
-    mobileNo2,
-    email,
-    securityDeposit,
-    address,
-    gstNo,
-    customerCode,
-    remark,
-    stbName,
-    stbNumber,
-    cardNumber,
-    membershipNo,
-    startDate,
-    openingBalanceRadio,
-    openingBalanceAmount,
-    additionalChargeDiscount,
-    additionalChargeRadio,
-    billDurationRadio,
-    billDurationSelect,
-    billTypeRadio,
-    gstTypeRadio,
-  } = req.body;
-
-  // const { authorization } = req.headers;
-  // const user = jwt.verify(authorization, config.secret);
-  // console.log(user, "USER");
-  // if (!user) {
-  //   return res.json({
-  //     message: "Unauthorized request",
-  //   });
-  // }
-
+router.post("/add-customer", verifyToken, async (req, res) => {
   try {
+    const {
+      name,
+      billingName,
+      billingArea,
+      billingNo,
+      mobileNo1,
+      mobileNo2,
+      email,
+      securityDeposit,
+      address,
+      gstNo,
+      customerCode,
+      remark,
+      stbName,
+      stbNumber,
+      cardNumber,
+      membershipNo,
+      startDate,
+      openingBalanceRadio,
+      openingBalanceAmount,
+      additionalChargeDiscount,
+      additionalChargeRadio,
+      billDurationRadio,
+      billDurationSelect,
+      billTypeRadio,
+      gstTypeRadio,
+      subdcriptionAmount,
+    } = req.body;
+
+    if (!req.user) {
+      return res.json({
+        message: "Unauthorized request",
+      });
+    }
     const newCustomer = new Customer({
       name,
       billingName,
@@ -363,7 +367,8 @@ router.post("/add-customer", async (req, res) => {
       billDurationSelect,
       billTypeRadio,
       gstTypeRadio,
-      // userId: user.id,
+      subdcriptionAmount,
+      userId: req.user.id,
     });
 
     await newCustomer.save(); // save the new product to the database
@@ -373,10 +378,11 @@ router.post("/add-customer", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-router.get("/customers", async (req, res) => {
+
+router.get("/customers", verifyToken, async (req, res) => {
   try {
-    // const id = req.user.id;
-    const customers = await Customer.find(); // retrieve all products from the database
+    const id = req.user.id;
+    const customers = await Customer.find({ userId: id }); // retrieve all products from the database
     res.status(200).json(customers); // send the retrieved products as JSON response
   } catch (error) {
     console.error(error);
@@ -384,14 +390,157 @@ router.get("/customers", async (req, res) => {
   }
 });
 
-router.post("/add-agent", async (req, res) => {
-  const { name, number, password } = req.body;
+router.get("/single-customer/:id", async (req, res) => {
+  try {
+    const customer = await Customer.findById(req.params.id); // retrieve product by ID
+    if (!customer) {
+      return res.status(404).json({ message: "customer not found" });
+    }
+    res.status(200).json(customer); // send the retrieved product as JSON response
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.put("/update-customer/:id", async (req, res) => {
+  const customerId = req.params.id;
+  const {
+    name,
+    billingName,
+    billingArea,
+    billingNo,
+    mobileNo1,
+    mobileNo2,
+    email,
+    securityDeposit,
+    address,
+    gstNo,
+    customerCode,
+    remark,
+    stbName,
+    stbNumber,
+    cardNumber,
+    membershipNo,
+    startDate,
+    openingBalanceRadio,
+    openingBalanceAmount,
+    additionalChargeDiscount,
+    additionalChargeRadio,
+    billDurationRadio,
+    billDurationSelect,
+    billTypeRadio,
+    gstTypeRadio,
+    subdcriptionAmount,
+  } = req.body;
 
   try {
+    const updateCustomer = await Customer.findByIdAndUpdate(
+      customerId,
+      {
+        name,
+        billingName,
+        billingArea,
+        billingNo,
+        mobileNo1,
+        mobileNo2,
+        email,
+        securityDeposit,
+        address,
+        gstNo,
+        customerCode,
+        remark,
+        stbName,
+        stbNumber,
+        cardNumber,
+        membershipNo,
+        startDate,
+        openingBalanceRadio,
+        openingBalanceAmount,
+        additionalChargeDiscount,
+        additionalChargeRadio,
+        billDurationRadio,
+        billDurationSelect,
+        billTypeRadio,
+        gstTypeRadio,
+        subdcriptionAmount,
+      },
+      { new: true }
+    );
+
+    if (!updateCustomer) {
+      return res.status(404).json({ message: "customer not found" });
+    }
+
+    res.status(200).json({
+      message: "customer updated successfully",
+      customer: updateCustomer,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.post("/renew", async (req, res) => {
+  const id = req.params.customerId;
+});
+
+// router.delete("/customers/:Id", async (req, res) => {
+//   const Id = req.params.customerId;
+
+//   // const { authorization } = req.headers;
+//   // const user = jwt.verify(authorization, config.secret);
+//   // console.log(user, "USER");
+//   // if (!user) {
+//   //   return res.json({
+//   //     message: "Unauthorized request",
+//   //   });
+//   // }
+
+//   try {
+//     // Find the customer by ID and delete it
+//     const deletedCustomer = await Customer.findByIdAndDelete(customerId);
+
+//     if (!deletedCustomer) {
+//       return res.status(404).json({ message: "Customer not found" });
+//     }
+
+//     res.status(200).json({ message: "Customer deleted successfully" });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// });
+
+router.delete("/delete-customers/:id", async (req, res) => {
+  try {
+    const deletedCustomer = await Customer.findByIdAndDelete(req.params.id);
+
+    if (!deletedCustomer) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+
+    res.status(200).json({ message: "Customer deleted successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.post("/add-agent", verifyToken, async (req, res) => {
+  try {
+    const { name, number, password } = req.body;
+    if (!req.user) {
+      return res.json({
+        message: "Unauthorized request",
+      });
+    }
     const newagent = new Agent({
       name,
       number,
       password,
+      userId: req.user.id,
     });
 
     await newagent.save(); // save the new product to the database
@@ -401,9 +550,10 @@ router.post("/add-agent", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-router.get("/agents", async (req, res) => {
+router.get("/agents", verifyToken, async (req, res) => {
   try {
-    const agents = await Agent.find(); // retrieve all products from the database
+    const { id } = req.user;
+    const agents = await Agent.find({ userId: id }); // retrieve all products from the database
     res.status(200).json(agents); // send the retrieved products as JSON response
   } catch (error) {
     console.error(error);
@@ -424,15 +574,14 @@ router.get("/single-agents/:id", async (req, res) => {
   }
 });
 
-
 router.put("/update-agent/:id", async (req, res) => {
   const agentId = req.params.id;
-  const { name, number} = req.body;
+  const { name, number } = req.body;
 
   try {
     const updatedAgent = await Agent.findByIdAndUpdate(
       agentId,
-      { name, number},
+      { name, number },
       { new: true }
     );
 
@@ -450,7 +599,6 @@ router.put("/update-agent/:id", async (req, res) => {
   }
 });
 
-
 router.get("/total-agents", async (req, res) => {
   try {
     const totalAgents = await Agent.countDocuments();
@@ -460,7 +608,6 @@ router.get("/total-agents", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
-
 
 router.post("import", upload.single("file"), (req, res) => {
   const stream = csv.parseFile(req.file.path, { headers: true });
@@ -481,8 +628,7 @@ router.post("import", upload.single("file"), (req, res) => {
   });
 });
 
-
-router.get('/download', async (req, res) => {
+router.get("/download", async (req, res) => {
   try {
     // Retrieve data from MongoDB
     const data = await Product.find(); // Modify the query according to your needs
@@ -491,54 +637,107 @@ router.get('/download', async (req, res) => {
     const xls = json2xls(data);
 
     // Set response headers for Excel file download
-    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.setHeader('Content-Disposition', 'attachment; filename=sample.xlsx');
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader("Content-Disposition", "attachment; filename=sample.xlsx");
 
     // Send the Excel file as the response
     res.send(xls);
   } catch (error) {
-    console.error('Error downloading data:', error);
-    res.status(500).json({ error: 'An error occurred while downloading data' });
+    console.error("Error downloading data:", error);
+    res.status(500).json({ error: "An error occurred while downloading data" });
   }
 });
 
-router.get('/agent-download',async(req,res)=>{
+router.get("/agent-download", async (req, res) => {
   try {
-
     const workbook = new exceljs.Workbook();
-    const worksheet =workbook.addWorksheet("My-Product")
+    const worksheet = workbook.addWorksheet("My-Product");
 
-    worksheet.columns =[
-      { header:"S no.", key:"s_no"},
-      { header:"Name", key:"name"},
-      { header:"Product Code", key:"product"},
-      { header:"Price", key:"price"},
-      { header:"Gst", key:"gst"},
-    ]
+    worksheet.columns = [
+      { header: "S no.", key: "s_no" },
+      { header: "Name", key: "name" },
+      { header: "Product Code", key: "product" },
+      { header: "Price", key: "price" },
+      { header: "Gst", key: "gst" },
+    ];
 
-    let count =2012;
-    const productData = await Product.find()
-    productData.forEach((product)=>{
-      product.s_no= count
+    let count = 2012;
+    const productData = await Product.find();
+    productData.forEach((product) => {
+      product.s_no = count;
 
-      worksheet.addRow(product)
-      count ++;
-    })
+      worksheet.addRow(product);
+      count++;
+    });
 
-   res.setHeader(
-    "Content-Type",
-    "application/vnd.openxmlformats-officedocument.spreadsheatml.sheet"
-   );
-   res.setHeader("Content-Disposition",`attachment; filename=product.xlsx`);
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheatml.sheet"
+    );
+    res.setHeader("Content-Disposition", `attachment; filename=product.xlsx`);
 
-   return workbook.xlsx.write(res).then(()=>{
-    res.status(200)
-   })
-    
+    return workbook.xlsx.write(res).then(() => {
+      res.status(200);
+    });
   } catch (error) {
-    console.log(error)
-    
+    console.log(error);
   }
-})
+});
+
+router.get("/customer-download", async (req, res) => {
+  try {
+    const workbook = new exceljs.Workbook();
+    const worksheet = workbook.addWorksheet("My-Product");
+
+    worksheet.columns = [
+      { header: "S no.", key: "s_no" },
+      { header: "Name", key: "name" },
+      { header: "Bill Name", key: "billingName" },
+      { header: "Locality", key: "price" },
+      { header: "Mobile", key: "mobileNo1" },
+      { header: "Customer Code", key: "customerCode" },
+      { header: "Billing Address", key: "address" },
+      { header: "Balance Amount", key: "openingBalanceAmount" },
+      { header: "Expiry Date", key: "" },
+      { header: "Prepaid/Postpaid", key: "billTypeRadio" },
+      { header: "Billing Interval", key: "billDurationSelect" },
+      { header: "Plan Amount", key: "" },
+      { header: "Sequence No", key: "securityDeposit" },
+      { header: "Active/Inactive", key: "" },
+      { header: "STB Name", key: "stbName" },
+      { header: "Settop Box Number", key: "stbNumber" },
+      { header: "Card Number", key: "cardNumber" },
+      { header: "Membership Number", key: "membershipNo" },
+      { header: "Products", key: "" },
+      { header: "Quantity", key: "" },
+      { header: "Additional Charge", key: "additionalChargeRadio" },
+      { header: "Discount", key: "additionalChargeDiscount" },
+    ];
+
+    let count = 2012;
+    const productData = await Customer.find();
+    productData.forEach((product) => {
+      product.s_no = count;
+
+      worksheet.addRow(product);
+      count++;
+    });
+
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheatml.sheet"
+    );
+    res.setHeader("Content-Disposition", `attachment; filename=product.xlsx`);
+
+    return workbook.xlsx.write(res).then(() => {
+      res.status(200);
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 module.exports = router;

@@ -10,6 +10,9 @@ const agentSchema = new mongoose.Schema({
   password: {
     type: String,
   },
+  userId: {
+    type: String,
+  },
 });
 
 const Agent = mongoose.model("Agent", agentSchema);

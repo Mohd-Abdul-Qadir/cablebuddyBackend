@@ -31,9 +31,9 @@ const productSchema = new mongoose.Schema({
   type: {
     type: String,
   },
-  // userId: {
-  //   type: String,
-  // },
+  userId: {
+    type: String,
+  },
 });
 
 const Product = mongoose.model("Product", productSchema);
