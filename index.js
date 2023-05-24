@@ -1,13 +1,11 @@
 const express = require("express");
-const routes = require("./routes/UserRoute");
-// const multer = require("multer");
+const routes = require("./routes/Route");
 const cors = require("cors");
 const app = express();
 const PORT = 4001;
 app.use(express.json());
 
 app.use(cors());
-// const upload = multer();
 require("./config/db");
 app.use("/api", routes);
 
