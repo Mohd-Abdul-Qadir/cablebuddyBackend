@@ -9,6 +9,12 @@ app.use(cors());
 require("./config/db");
 app.use("/api", routes);
 
+app.use(express.static(path.join(__dirname, "./cablebuddy")));
+
+app.get("/", function (req, res) {
+  res.sendFile(path.join(__dirname, "build", "./cablebuddy/index.html"));
+});
+
 app.listen(PORT, () => {
   console.log(`server started on ${PORT}`);
 });
