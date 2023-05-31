@@ -5,15 +5,27 @@ const user = require("../services/user.service");
 const product = require("../services/product.service");
 const customer = require("../services/customer.service");
 const agent = require("../services/agent.service");
-// for parsing application/json
+const history = require("../services/histoy.service");
 require("../config/db");
-const auth = require("../middlware/auth");
 const verifyToken = require("../middlware/auth");
+
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, "/tmp/my-uploads");
+//   },
+//   filename: function (req, file, cb) {
+//     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+//     cb(null, file.fieldname + "-" + uniqueSuffix);
+//   },
+// });
+
+// const upload = multer({ storage: storage });
 
 //****************User Api************/
 router.post("/register", user.createUser);
 router.post("/login", user.loginUser);
-router.put("/users/:id", user.editUser);
+router.get("/users", verifyToken, user.getUserByToken);
+router.put("/user-update", verifyToken, user.editUser);
 
 //************Product api*************/
 router.post("/add-product", verifyToken, product.addProduct);
@@ -28,6 +40,7 @@ router.post("/add-customer", verifyToken, customer.addCutomer);
 router.get("/customers", verifyToken, customer.getCustomer);
 router.get("/single-customer/:id", customer.getsingleProduct);
 router.put("/update-customer/:id", customer.UpdateCustomer);
+router.put("/update-amount/:id", customer.UpdateCollectionAmount);
 router.delete("/delete-customers/:id", customer.deleteCustomer);
 router.get("/customer-download", customer.downloadCustomer);
 
@@ -40,5 +53,9 @@ router.get("/single-agents/:id", agent.getSingleAgent);
 router.put("/update-agent/:id", agent.updateAgent);
 router.get("/total-agents", agent.totalAgent);
 router.get("/agent-download", agent.downloadAgent);
+
+//*******************Balance History*******+*******************/
+router.get("/balance-history/:id", history.getBalanceHistory);
+router.get("/balance-download", history.downloadBalanceSheet);
 
 module.exports = router;

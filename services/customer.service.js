@@ -1,3 +1,4 @@
+const BalanceHistory = require("../models/balanceHistory");
 const Customer = require("../models/customerSchema");
 const exceljs = require("exceljs");
 
@@ -31,6 +32,9 @@ exports.addCutomer = async (req, res) => {
       billTypeRadio,
       gstTypeRadio,
       subdcriptionAmount,
+      discountAmount,
+      balanceAmount,
+      totalPayment,
     } = req.body;
 
     if (!req.user) {
@@ -65,6 +69,9 @@ exports.addCutomer = async (req, res) => {
       billTypeRadio,
       gstTypeRadio,
       subdcriptionAmount,
+      totalPayment,
+      discountAmount,
+      balanceAmount,
       userId: req.user.id,
     });
 
@@ -132,6 +139,9 @@ exports.UpdateCustomer = async (req, res) => {
     billTypeRadio,
     gstTypeRadio,
     subdcriptionAmount,
+    totalPayment,
+    discountAmount,
+    balanceAmount,
   } = req.body;
 
   try {
@@ -164,6 +174,57 @@ exports.UpdateCustomer = async (req, res) => {
         billTypeRadio,
         gstTypeRadio,
         subdcriptionAmount,
+        totalPayment,
+        discountAmount,
+        balanceAmount,
+      },
+      { new: true }
+    );
+
+    if (!updateCustomer) {
+      return res.status(404).json({ message: "customer not found" });
+    }
+
+    res.status(200).json({
+      message: "customer updated successfully",
+      customer: updateCustomer,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.UpdateCollectionAmount = async (req, res) => {
+  const customerId = req.params.id;
+  const {
+    // ... other properties
+    transactionAmount,
+    remainingAmount,
+    fromDate,
+    toDate,
+    paymentMode,
+    name,
+  } = req.body;
+
+  const balanceHistory = new BalanceHistory({
+    customerId,
+    fromDate,
+    toDate,
+    transactionAmount,
+    remainingAmount,
+    paymentMode,
+    name,
+  });
+
+  await balanceHistory.save();
+
+  try {
+    const updateCustomer = await Customer.findByIdAndUpdate(
+      customerId,
+      {
+        // ... other properties
+        balanceAmount: remainingAmount,
       },
       { new: true }
     );

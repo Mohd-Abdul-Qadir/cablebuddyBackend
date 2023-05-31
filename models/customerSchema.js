@@ -80,6 +80,15 @@ const customerSchema = new mongoose.Schema({
   subdcriptionAmount: {
     type: String,
   },
+  totalPayment: {
+    type: String,
+  },
+  discountAmount: {
+    type: String,
+  },
+  balanceAmount: {
+    type: String,
+  },
   userId: {
     type: String,
   },
