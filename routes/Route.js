@@ -13,8 +13,10 @@ const verifyToken = require("../middlware/auth");
 //****************User Api************/
 router.post("/register", user.createUser);
 router.post("/login", user.loginUser);
+router.get("/agentloginbyadmin/:number", verifyToken, user.agentLoginByAdmin);
 router.get("/users", verifyToken, user.getUserByToken);
 router.put("/user-update", verifyToken, upload.single("file"), user.editUser);
+router.get("/user-dashboard", verifyToken, user.dashboardData);
 
 //************Product api*************/
 router.post("/add-product", verifyToken, product.addProduct);

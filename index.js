@@ -2,6 +2,7 @@ const express = require("express");
 const routes = require("./routes/Route");
 const cors = require("cors");
 const app = express();
+const path = require("path");
 const PORT = 4001;
 app.use(express.json());
 

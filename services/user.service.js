@@ -2,6 +2,9 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/userSchema");
 const config = require("../config/config");
+const Agent = require("../models/agentSchema");
+const Customer = require("../models/customerSchema");
+const BalanceHistory = require("../models/balanceHistory");
 require("../config/db");
 
 // register api **************************************
@@ -114,6 +117,60 @@ exports.loginUser = async (req, res) => {
       console.log(token, "token ");
       res.json({ message: "Login successful", token });
     });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+exports.agentLoginByAdmin = async (req, res) => {
+  try {
+    const { number } = req.params;
+    const agent = await Agent.findOne({ number: number });
+    if (!agent && agent.userId !== req.user._id)
+      return res.status(500).json({ error: "Agent not found" });
+    const payload = {
+      id: agent._id,
+      name: agent.name,
+      userId: agent.userId,
+      number: agent.number,
+    };
+    jwt.sign(payload, config.secret, { expiresIn: "7h" }, (err, token) => {
+      if (err) throw err;
+      res.json({ message: "Agent login successful", token });
+    });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+exports.dashboardData = async (req, res) => {
+  try {
+    const dashboard = {
+      monthlyTotalCollection: 0,
+      todayTotalCollection: 0,
+      totalPendingAmount: 0,
+      totalOnlineCollection: 0,
+      totalCustomer: 0,
+      totalActiveCustomer: 0,
+      totalInActiveCustomer: 0,
+      thisMonthNewCustomer: 0,
+    };
+    // const agents = await Agent.find({ userId: req.user.id });
+    // TODO: fetch customers created by agents
+    const customers = await Customer.find({ userId: req.user.id }); // customer created by adming
+    dashboard.totalCustomer = customers.length;
+    dashboard.totalActiveCustomer = customers.length;
+    const balanceHistoryOfCustomers = await Promise.all(
+      customers.map((customer) => {
+        return BalanceHistory.find({
+          customerId: customer._id,
+        });
+      })
+    );
+
+    res.json({ user: balanceHistoryOfCustomers });
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ error: "Server error" });
