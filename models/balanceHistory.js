@@ -28,6 +28,9 @@ const balanceHistorySchema = new mongoose.Schema({
   name: {
     type: String,
   },
+  collectedBy: {
+    type: String,
+  },
 });
 
 const BalanceHistory = mongoose.model("BalanceHistory", balanceHistorySchema);

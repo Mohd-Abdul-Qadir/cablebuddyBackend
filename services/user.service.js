@@ -127,6 +127,7 @@ exports.editUser = async (req, res) => {
   //   name: user.name,
   //   email: user.email,
   // };
+  const file = req.file;
   const userId = req.user.id;
   const {
     business,

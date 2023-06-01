@@ -205,6 +205,7 @@ exports.UpdateCollectionAmount = async (req, res) => {
     toDate,
     paymentMode,
     name,
+    collectedBy,
   } = req.body;
 
   const balanceHistory = new BalanceHistory({
@@ -215,6 +216,7 @@ exports.UpdateCollectionAmount = async (req, res) => {
     remainingAmount,
     paymentMode,
     name,
+    collectedBy,
   });
 
   await balanceHistory.save();

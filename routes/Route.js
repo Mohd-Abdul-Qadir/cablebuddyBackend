@@ -6,26 +6,15 @@ const product = require("../services/product.service");
 const customer = require("../services/customer.service");
 const agent = require("../services/agent.service");
 const history = require("../services/histoy.service");
+const upload = require("../services/upload.service");
 require("../config/db");
 const verifyToken = require("../middlware/auth");
-
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, "/tmp/my-uploads");
-//   },
-//   filename: function (req, file, cb) {
-//     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-//     cb(null, file.fieldname + "-" + uniqueSuffix);
-//   },
-// });
-
-// const upload = multer({ storage: storage });
 
 //****************User Api************/
 router.post("/register", user.createUser);
 router.post("/login", user.loginUser);
 router.get("/users", verifyToken, user.getUserByToken);
-router.put("/user-update", verifyToken, user.editUser);
+router.put("/user-update", verifyToken, upload.single("file"), user.editUser);
 
 //************Product api*************/
 router.post("/add-product", verifyToken, product.addProduct);

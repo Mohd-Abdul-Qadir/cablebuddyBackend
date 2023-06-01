@@ -82,7 +82,7 @@ const userSchema = new mongoose.Schema({
     type: String,
   },
   uploadPanCard: {
-    type: String,
+    type: [],
   },
   bankPassbookphoto: {
     type: String,
