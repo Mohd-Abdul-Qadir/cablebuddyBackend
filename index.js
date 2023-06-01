@@ -10,6 +10,12 @@ app.use(cors());
 require("./config/db");
 app.use("/api", routes);
 
+app.get("/test", (req, res) => {
+  res.status(200).json({
+    message: "Server is online.",
+  });
+});
+
 app.use(express.static("build"));
 app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "build", "index.html"));
