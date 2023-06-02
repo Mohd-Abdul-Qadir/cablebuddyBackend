@@ -16,10 +16,10 @@ app.get("/test", (req, res) => {
   });
 });
 
-app.use(express.static("build"));
-app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "build", "index.html"));
-});
+// app.use(express.static("build"));
+// app.get("*", (req, res) => {
+//   res.sendFile(path.resolve(__dirname, "build", "index.html"));
+// });
 
 app.listen(PORT, () => {
   console.log(`server started on ${PORT}`);
