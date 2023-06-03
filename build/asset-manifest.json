@@ -1,0 +1,30 @@
+{
+  "files": {
+    "main.css": "/static/css/main.9c6f6571.css",
+    "main.js": "/static/js/main.01f9fec8.js",
+    "static/js/496.c8bc0447.chunk.js": "/static/js/496.c8bc0447.chunk.js",
+    "static/media/FrontImage.png": "/static/media/FrontImage.ffa1224a76bbf338b81c.png",
+    "static/media/InvoiceImage.png": "/static/media/InvoiceImage.5f7cc1c7de3050bb77e5.png",
+    "static/media/ThirdClient.png": "/static/media/ThirdClient.fe198a394ef00742e874.png",
+    "static/media/FirstClient.png": "/static/media/FirstClient.c632a9691552bc16fc14.png",
+    "static/media/handsomeMen.png": "/static/media/handsomeMen.6fc01c965ce69be75a00.png",
+    "static/media/Gym.png": "/static/media/Gym.8e553693195aa794cdbf.png",
+    "static/media/Hotel.png": "/static/media/Hotel.8e553693195aa794cdbf.png",
+    "static/media/Cable.png": "/static/media/Cable.16cc6177f0639d01d973.png",
+    "static/media/FeaturesLayer.png": "/static/media/FeaturesLayer.d5ed76ab93fe479f96fb.png",
+    "static/media/CableBackground.png": "/static/media/CableBackground.b3d7df9eb1e9da851194.png",
+    "static/media/Cablebuddy.png": "/static/media/Cablebuddy.4e49e545fae94370e9da.png",
+    "static/media/revicons.eot": "/static/media/revicons.a77de540a38981833f9e.eot",
+    "static/media/revicons.ttf": "/static/media/revicons.57fd05d4ae650374c8de.ttf",
+    "static/media/Oasis.png": "/static/media/Oasis.3329af8eecb5f2e20602.png",
+    "static/media/revicons.woff": "/static/media/revicons.e8746a624ed098489406.woff",
+    "index.html": "/index.html",
+    "main.9c6f6571.css.map": "/static/css/main.9c6f6571.css.map",
+    "main.01f9fec8.js.map": "/static/js/main.01f9fec8.js.map",
+    "496.c8bc0447.chunk.js.map": "/static/js/496.c8bc0447.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.9c6f6571.css",
+    "static/js/main.01f9fec8.js"
+  ]
+}
