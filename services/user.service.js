@@ -7,7 +7,7 @@ const Customer = require("../models/customerSchema");
 const BalanceHistory = require("../models/balanceHistory");
 require("../config/db");
 
-// register api **************************************
+// User register api **************************************
 exports.createUser = async (req, res) => {
   const {
     roll,
@@ -79,6 +79,7 @@ exports.createUser = async (req, res) => {
     email,
     uploadPanCard,
     bankPassbookphoto,
+    profileImg,
   });
 
   try {
@@ -178,13 +179,184 @@ exports.dashboardData = async (req, res) => {
 };
 
 // Edit api *****************************************************************************
+// exports.editUser = async (req, res) => {
+//   const { uploadPanCard, bankPassbookphoto } = req.files;
+
+//   const userId = req.user.id;
+//   const {
+//     business,
+//     number,
+//     name,
+//     agency,
+//     gstnumber,
+//     state,
+//     city,
+//     address,
+//     billduration,
+//     billtype,
+//     gsttype,
+//     number_message,
+//     name_message,
+//     customised_message,
+//     message_type,
+//     demo_message,
+//     prefix,
+//     accountholdername,
+//     accountstatus,
+//     accountnumber,
+//     bankIfsc,
+//     Pancardnumber,
+//     email,
+//   } = req.body;
+
+//   try {
+//     const userUpdate = await User.findByIdAndUpdate(
+//       userId,
+//       {
+//         business,
+//         number,
+//         name,
+//         agency,
+//         gstnumber,
+//         state,
+//         city,
+//         address,
+//         billduration,
+//         billtype,
+//         gsttype,
+//         number_message,
+//         name_message,
+//         customised_message,
+//         message_type,
+//         demo_message,
+//         prefix,
+//         accountholdername,
+//         accountstatus,
+//         accountnumber,
+//         bankIfsc,
+//         Pancardnumber,
+//         email,
+//         uploadPanCard: uploadPanCard[0].path,
+//         bankPassbookphoto: bankPassbookphoto[0].path,
+//       },
+//       { new: true }
+//     );
+
+//     if (!userUpdate) {
+//       return res.status(404).send("User not found");
+//     }
+//     res.status(200).json({
+//       message: "user Update successfull",
+//       user: userUpdate,
+//     });
+//   } catch (err) {
+//     console.log(err);
+//     res.status(400).send(err);
+//   }
+// };
+
+// exports.editUser = async (req, res) => {
+//   const { uploadPanCard, bankPassbookphoto, profileImg } = req.files;
+
+//   // if (
+//   //   !uploadPanCard ||
+//   //   !uploadPanCard[0] ||
+//   //   !bankPassbookphoto ||
+//   //   !bankPassbookphoto[0]
+//   // ) {
+//   //   return res
+//   //     .status(400)
+//   //     .send("Please upload both uploadPanCard and bankPassbookphoto files");
+//   // }
+
+//   // if (!uploadPanCard || !uploadPanCard[0]) {
+//   //   return res.status(400).send("Please upload the profileImg file");
+//   // }
+
+//   // if (!bankPassbookphoto || !bankPassbookphoto[0]) {
+//   //   return res.status(400).send("Please upload the profileImg file");
+//   // }
+
+//   // if (!profileImg || !profileImg[0]) {
+//   //   return res.status(400).send("Please upload the profileImg file");
+//   // }
+//   const userId = req.user.id;
+//   const {
+//     business,
+//     number,
+//     name,
+//     agency,
+//     gstnumber,
+//     state,
+//     city,
+//     address,
+//     billduration,
+//     billtype,
+//     gsttype,
+//     number_message,
+//     name_message,
+//     customised_message,
+//     message_type,
+//     demo_message,
+//     prefix,
+//     accountholdername,
+//     accountstatus,
+//     accountnumber,
+//     bankIfsc,
+//     Pancardnumber,
+//     email,
+//   } = req.body;
+
+//   try {
+//     const userUpdate = await User.findByIdAndUpdate(
+//       userId,
+//       {
+//         business,
+//         number,
+//         name,
+//         agency,
+//         gstnumber,
+//         state,
+//         city,
+//         address,
+//         billduration,
+//         billtype,
+//         gsttype,
+//         number_message,
+//         name_message,
+//         customised_message,
+//         message_type,
+//         demo_message,
+//         prefix,
+//         accountholdername,
+//         accountstatus,
+//         accountnumber,
+//         bankIfsc,
+//         Pancardnumber,
+//         email,
+//         uploadPanCard: uploadPanCard[0].path,
+//         bankPassbookphoto: bankPassbookphoto[0].path,
+//         profileImg: profileImg[0].path,
+//       },
+//       { new: true }
+//     );
+
+//     if (!userUpdate) {
+//       return res.status(404).send("User not found");
+//     }
+//     res.status(200).json({
+//       message: "User update successful",
+//       user: userUpdate,
+//     });
+//   } catch (err) {
+//     console.log(err); // Log the error to the console
+//     res.status(400).send(err);
+//   }
+// };
+
 exports.editUser = async (req, res) => {
-  // req.user = {
-  //   id: user.id,
-  //   name: user.name,
-  //   email: user.email,
-  // };
-  const file = req.file;
+  const { uploadPanCard, bankPassbookphoto, profileImg } = req.files;
+
   const userId = req.user.id;
   const {
     business,
@@ -210,51 +382,61 @@ exports.editUser = async (req, res) => {
     bankIfsc,
     Pancardnumber,
     email,
-    uploadPanCard,
-    bankPassbookphoto,
   } = req.body;
 
   try {
-    const userUpdate = await User.findByIdAndUpdate(
-      userId,
-      {
-        business,
-        number,
-        name,
-        agency,
-        gstnumber,
-        state,
-        city,
-        address,
-        billduration,
-        billtype,
-        gsttype,
-        number_message,
-        name_message,
-        customised_message,
-        message_type,
-        demo_message,
-        prefix,
-        accountholdername,
-        accountstatus,
-        accountnumber,
-        bankIfsc,
-        Pancardnumber,
-        email,
-        uploadPanCard,
-        bankPassbookphoto,
-      },
-      { new: true }
-    );
+    const updateUser = {
+      business,
+      number,
+      name,
+      agency,
+      gstnumber,
+      state,
+      city,
+      address,
+      billduration,
+      billtype,
+      gsttype,
+      number_message,
+      name_message,
+      customised_message,
+      message_type,
+      demo_message,
+      prefix,
+      accountholdername,
+      accountstatus,
+      accountnumber,
+      bankIfsc,
+      Pancardnumber,
+      email,
+    };
+
+    if (uploadPanCard && uploadPanCard[0]) {
+      updateUser.uploadPanCard = uploadPanCard[0].path;
+    }
+
+    if (bankPassbookphoto && bankPassbookphoto[0]) {
+      updateUser.bankPassbookphoto = bankPassbookphoto[0].path;
+    }
+
+    if (profileImg && profileImg[0]) {
+      updateUser.profileImg = profileImg[0].path;
+    }
+
+    const userUpdate = await User.findByIdAndUpdate(userId, updateUser, {
+      new: true,
+    });
 
     if (!userUpdate) {
       return res.status(404).send("User not found");
     }
+
     res.status(200).json({
-      message: "user Update successfull",
+      message: "User update successful",
       user: userUpdate,
     });
   } catch (err) {
+    console.log(err); // Log the error to the console
     res.status(400).send(err);
   }
 };

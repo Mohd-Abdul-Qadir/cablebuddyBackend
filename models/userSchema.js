@@ -82,9 +82,12 @@ const userSchema = new mongoose.Schema({
     type: String,
   },
   uploadPanCard: {
-    type: [],
+    type: String,
   },
   bankPassbookphoto: {
+    type: String,
+  },
+  profileImg: {
     type: String,
   },
 });

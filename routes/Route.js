@@ -15,7 +15,16 @@ router.post("/register", user.createUser);
 router.post("/login", user.loginUser);
 router.get("/agentloginbyadmin/:number", verifyToken, user.agentLoginByAdmin);
 router.get("/users", verifyToken, user.getUserByToken);
-router.put("/user-update", verifyToken, upload.single("file"), user.editUser);
+router.put(
+  "/user-update",
+  verifyToken,
+  upload.fields([
+    { name: "uploadPanCard", maxCount: 1 },
+    { name: "bankPassbookphoto", maxCount: 1 },
+    { name: "profileImg", maxCount: 1 },
+  ]),
+  user.editUser
+);
 router.get("/user-dashboard", verifyToken, user.dashboardData);
 
 //************Product api*************/
