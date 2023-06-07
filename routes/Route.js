@@ -57,5 +57,7 @@ router.get("/agent-download", agent.downloadAgent);
 //*******************Balance History*******+*******************/
 router.get("/balance-history/:id", history.getBalanceHistory);
 router.get("/balance-download", history.downloadBalanceSheet);
+router.get("/total-paid", history.getTotalPaid);
+router.get("/total-paid-online", history.getTotalPaidOnline);
 
 module.exports = router;

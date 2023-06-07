@@ -6,8 +6,6 @@ exports.getCustomer = async (req, res) => {
     const id = req.user.id;
     const customers = await Customer.find({ userId: id });
 
-    // const tot
-
     res.status(200).json(customers);
   } catch (error) {
     console.error(error);

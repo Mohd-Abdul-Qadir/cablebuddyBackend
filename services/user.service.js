@@ -354,8 +354,95 @@ exports.dashboardData = async (req, res) => {
 //   }
 // };
 
+// exports.editUser = async (req, res) => {
+//   const { uploadPanCard, bankPassbookphoto, profileImg } = req.files;
+
+//   const userId = req.user.id;
+//   const {
+//     business,
+//     number,
+//     name,
+//     agency,
+//     gstnumber,
+//     state,
+//     city,
+//     address,
+//     billduration,
+//     billtype,
+//     gsttype,
+//     number_message,
+//     name_message,
+//     customised_message,
+//     message_type,
+//     demo_message,
+//     prefix,
+//     accountholdername,
+//     accountstatus,
+//     accountnumber,
+//     bankIfsc,
+//     Pancardnumber,
+//     email,
+//   } = req.body;
+
+//   try {
+//     const updateUser = {
+//       business,
+//       number,
+//       name,
+//       agency,
+//       gstnumber,
+//       state,
+//       city,
+//       address,
+//       billduration,
+//       billtype,
+//       gsttype,
+//       number_message,
+//       name_message,
+//       customised_message,
+//       message_type,
+//       demo_message,
+//       prefix,
+//       accountholdername,
+//       accountstatus,
+//       accountnumber,
+//       bankIfsc,
+//       Pancardnumber,
+//       email,
+//     };
+
+//     if (uploadPanCard && uploadPanCard[0]) {
+//       updateUser.uploadPanCard = uploadPanCard[0].path;
+//     }
+
+//     if (bankPassbookphoto && bankPassbookphoto[0]) {
+//       updateUser.bankPassbookphoto = bankPassbookphoto[0].path;
+//     }
+
+//     if (profileImg && profileImg[0]) {
+//       updateUser.profileImg = profileImg[0].path;
+//     }
+
+//     const userUpdate = await User.findByIdAndUpdate(userId, updateUser, {
+//       new: true,
+//     });
+
+//     if (!userUpdate) {
+//       return res.status(404).send("User not found");
+//     }
+
+//     res.status(200).json({
+//       message: "User update successful",
+//       user: userUpdate,
+//     });
+//   } catch (err) {
+//     console.log(err); // Log the error to the console
+//     res.status(400).send(err);
+//   }
+// };
+
 exports.editUser = async (req, res) => {
-  const { uploadPanCard, bankPassbookphoto, profileImg } = req.files;
+  const { uploadPanCard, bankPassbookphoto, profileImg } = req.files || {};
 
   const userId = req.user.id;
   const {

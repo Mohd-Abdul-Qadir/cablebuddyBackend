@@ -31,6 +31,12 @@ const balanceHistorySchema = new mongoose.Schema({
   collectedBy: {
     type: String,
   },
+  stbNo: {
+    type: String,
+  },
+  cardNo: {
+    type: String,
+  },
 });
 
 const BalanceHistory = mongoose.model("BalanceHistory", balanceHistorySchema);

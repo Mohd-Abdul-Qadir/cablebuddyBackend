@@ -198,7 +198,6 @@ exports.UpdateCustomer = async (req, res) => {
 exports.UpdateCollectionAmount = async (req, res) => {
   const customerId = req.params.id;
   const {
-    // ... other properties
     transactionAmount,
     remainingAmount,
     fromDate,
@@ -206,6 +205,8 @@ exports.UpdateCollectionAmount = async (req, res) => {
     paymentMode,
     name,
     collectedBy,
+    stbNo,
+    cardNo,
   } = req.body;
 
   const balanceHistory = new BalanceHistory({
@@ -217,6 +218,8 @@ exports.UpdateCollectionAmount = async (req, res) => {
     paymentMode,
     name,
     collectedBy,
+    stbNo,
+    cardNo,
   });
 
   await balanceHistory.save();
@@ -225,7 +228,6 @@ exports.UpdateCollectionAmount = async (req, res) => {
     const updateCustomer = await Customer.findByIdAndUpdate(
       customerId,
       {
-        // ... other properties
         balanceAmount: remainingAmount,
       },
       { new: true }

@@ -16,6 +16,58 @@ exports.getBalanceHistory = async (req, res) => {
   }
 };
 
+//********************* Get Total payment ***********************************/
+exports.getTotalPaid = async (req, res) => {
+  try {
+    const balanceHistories = await BalanceHistory.find();
+
+    if (!balanceHistories) {
+      return res.status(404).json({ message: "No balance history found" });
+    }
+
+    let totalTransactionAmount = balanceHistories.reduce(
+      (sum, history) => sum + Number(history.transactionAmount),
+      0
+    );
+
+    res.status(200).json({
+      balanceHistories,
+      totalTransactionAmount,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+//****************************Get online collect amount ******************************/
+
+exports.getTotalPaidOnline = async (req, res) => {
+  try {
+    const balanceHistories = await BalanceHistory.find({
+      paymentMode: "online",
+    });
+
+    if (!balanceHistories || balanceHistories.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No online balance history found" });
+    }
+
+    let totalTransactionAmount = balanceHistories.reduce(
+      (sum, history) => sum + Number(history.transactionAmount),
+      0
+    );
+
+    res.status(200).json({
+      balanceHistories,
+      totalTransactionAmount,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 // ****************************Download List *****************************************/
 exports.downloadBalanceSheet = async (req, res) => {
   try {
