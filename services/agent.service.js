@@ -136,7 +136,8 @@ exports.updateAgent = async (req, res) => {
 // Total Agent ************************************************************
 exports.totalAgent = async (req, res) => {
   try {
-    const totalAgents = await Agent.countDocuments();
+    const { id } = req.user;
+    const totalAgents = await Agent.countDocuments({ userId: id });
     res.json({ totalAgents });
   } catch (error) {
     console.error(error);
@@ -215,30 +216,18 @@ exports.downloadAgent = async (req, res) => {
 //   }
 // });
 
-//********************************************************************************** */
+//***************************Get Agent*****************************/
+exports.getAgentByToken = async (req, res) => {
+  try {
+    const agent = await Agent.findById(req.user.id);
 
-// router.post("/agent-login", async (req, res) => {
-//   try {
-//     const { number, password } = req.body;
+    if (!agent) {
+      return res.status(404).send("User not found");
+    }
 
-//     // Perform validation on number and password
-
-//     const agent = await Agent.findOne({ number });
-
-//     if (!agent) {
-//       return res.status(404).json({ message: "Agent not found" });
-//     }
-
-//     if (agent.password !== password) {
-//       return res.status(401).json({ message: "Invalid credentials" });
-//     }
-
-//     // Generate and return an authentication token
-//     const token = generateAuthToken(agent);
-
-//     res.status(200).json({ token });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// });
+    console.log(agent, "this is agent");
+    res.send(agent);
+  } catch (err) {
+    res.status(500).send("Internal Server Error");
+  }
+};

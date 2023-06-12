@@ -1,6 +1,7 @@
 const BalanceHistory = require("../models/balanceHistory");
 const Customer = require("../models/customerSchema");
 const exceljs = require("exceljs");
+const moment = require("moment");
 
 //Add customer ***************************************************************
 exports.addCutomer = async (req, res) => {
@@ -307,12 +308,45 @@ exports.downloadCustomer = async (req, res) => {
       "Content-Type",
       "application/vnd.openxmlformats-officedocument.spreadsheatml.sheet"
     );
-    res.setHeader("Content-Disposition", `attachment; filename=product.xlsx`);
+    res.setHeader("Content-Disposition", `attachment; filename=customers.xlsx`);
 
     return workbook.xlsx.write(res).then(() => {
       res.status(200);
     });
   } catch (error) {
     console.log(error);
+  }
+};
+
+//*******************************Monthly customer find*******************/
+exports.getCustomerMonthly = async (req, res) => {
+  try {
+    const currentMonth = moment().format("MM");
+    const currentYear = moment().format("YYYY");
+    const customers = await Customer.find({
+      createdAt: {
+        $expr: {
+          $and: [
+            { $eq: [{ $month: "$createdAt" }, parseInt(currentMonth)] },
+            { $eq: [{ $year: "$createdAt" }, parseInt(currentYear)] },
+          ],
+        },
+      },
+    });
+    res.status(200).json(customers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+//****************Get Total customer ***********************************/
+exports.getTotalCustomers = async (req, res) => {
+  try {
+    const totalCustomers = await Customer.countDocuments();
+    res.status(200).json({ totalCustomers });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
 };
