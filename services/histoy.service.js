@@ -92,6 +92,10 @@ exports.downloadBalanceSheet = async (req, res) => {
       count++;
     });
 
+    worksheet.getRow(1).eachCell((cell) => {
+      cell.font = { bold: true };
+    });
+
     res.setHeader(
       "Content-Type",
       "application/vnd.openxmlformats-officedocument.spreadsheatml.sheet"

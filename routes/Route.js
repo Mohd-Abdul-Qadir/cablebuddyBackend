@@ -33,7 +33,8 @@ router.get("/products", verifyToken, product.getProduct);
 router.delete("/delete-products/:id", product.deleteProduct);
 router.get("/single-products/:id", product.singleProduct);
 router.put("/update-product/:id", product.updateProduct);
-router.get("/download", product.downloadProduct);
+router.get("/product-download", product.downloadProductSheet);
+router.get("/download-pdf", product.downloadProductPdf);
 
 //***********Customer Api*****************************************/
 router.post("/add-customer", verifyToken, customer.addCutomer);
@@ -43,6 +44,8 @@ router.put("/update-customer/:id", customer.UpdateCustomer);
 router.put("/update-amount/:id", customer.UpdateCollectionAmount);
 router.delete("/delete-customers/:id", customer.deleteCustomer);
 router.get("/customer-download", customer.downloadCustomer);
+router.get("/customer-monthly", customer.getCustomerMonthly);
+router.get("/customer-totalcustomer", customer.getTotalCustomers);
 
 // *************Agent Api********************************************
 router.post("/add-agent", verifyToken, agent.AddAgent);
@@ -51,8 +54,9 @@ router.post("/agent-login", agent.loginAgent);
 router.get("/agent-data", agent.agentData);
 router.get("/single-agents/:id", agent.getSingleAgent);
 router.put("/update-agent/:id", agent.updateAgent);
-router.get("/total-agents", agent.totalAgent);
+router.get("/total-agents", verifyToken, agent.totalAgent);
 router.get("/agent-download", agent.downloadAgent);
+router.get("/agent", verifyToken, agent.getAgentByToken);
 
 //*******************Balance History*******+*******************/
 router.get("/balance-history/:id", history.getBalanceHistory);
