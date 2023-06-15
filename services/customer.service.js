@@ -36,6 +36,7 @@ exports.addCutomer = async (req, res) => {
       discountAmount,
       balanceAmount,
       totalPayment,
+      selectedTags,
     } = req.body;
 
     if (!req.user) {
@@ -74,6 +75,7 @@ exports.addCutomer = async (req, res) => {
       discountAmount,
       balanceAmount,
       userId: req.user.id,
+      selectedTags,
     });
 
     await newCustomer.save();

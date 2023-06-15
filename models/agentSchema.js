@@ -13,6 +13,9 @@ const agentSchema = new mongoose.Schema({
   userId: {
     type: String,
   },
+  area: {
+    type: Array,
+  },
 });
 
 const Agent = mongoose.model("Agent", agentSchema);
