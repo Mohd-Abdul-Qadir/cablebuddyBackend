@@ -92,6 +92,9 @@ const customerSchema = new mongoose.Schema({
   userId: {
     type: String,
   },
+  selectedTags: {
+    type: Array,
+  },
 });
 
 const Customer = mongoose.model("Customer", customerSchema);

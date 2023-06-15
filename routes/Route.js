@@ -7,6 +7,7 @@ const customer = require("../services/customer.service");
 const agent = require("../services/agent.service");
 const history = require("../services/histoy.service");
 const upload = require("../services/upload.service");
+const month = require("../services/monthly.service");
 require("../config/db");
 const verifyToken = require("../middlware/auth");
 
@@ -63,5 +64,8 @@ router.get("/balance-history/:id", history.getBalanceHistory);
 router.get("/balance-download", history.downloadBalanceSheet);
 router.get("/total-paid", history.getTotalPaid);
 router.get("/total-paid-online", history.getTotalPaidOnline);
+
+//****************************Monthly payment*****************************/
+router.get("/monthly", month.calculateTransactionAmountSum);
 
 module.exports = router;

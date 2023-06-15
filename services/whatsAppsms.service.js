@@ -3,8 +3,8 @@ const axios = require("axios");
 // const mytoken = process.env.MYTOKEN;
 
 const token =
-  "EAAhjN7Vb8ZAwBAAG8gyH6heyr4ZCZCZA8gYPNHPyDOvP1jSpO8rFLIz2o7VEvKjEQJ4BgbngUzRDG29qLaadZBbqM9e9omkdx9zhdZAi3rdFBF9t9wb83UCFdU3v0kiO71ROiNjanzCy6J3K0CJw7ZCWUCeWPDhAU0nZAnCxNMNLv8UB8fZB9ZAPmq7OTXudtwJQLhxutCEesfiwZDZD";
-const mytoken = process.env.MYTOKEN;
+  "EAAhjN7Vb8ZAwBABRutBGPcjOtNCEJbErs6x2wrzHmx4ICM4HgZBdmMcRrcrZAoZCA4WYew9oe3bvhrF4l9WpYY2pMj85a9WxuTc1H1lhto9ho58kzxa564JmlR6rKyec8H1t1ZA9wZBiMNglFnEPmsxLbqo6ZBELirubmxW1ONuSZAHdthzeapWhZAZATrDVFtiT6G844fUZAtErgZDZD";
+const mytoken = "Abdul";
 
 //to verify the callback url from dashboard side - cloud api side
 app.get("/webhook", (req, res) => {
@@ -35,8 +35,8 @@ exports.createUser = (req, res) => {
       body_param.entry[0].changes[0].value.messages &&
       body_param.entry[0].changes[0].value.messages[0]
     ) {
-      let phon_no_id =
-        body_param.entry[0].changes[0].value.metadata.phone_number_id;
+      let phon_no_id = 9458431173;
+      body_param.entry[0].changes[0].value.metadata.phone_number_id;
       let from = body_param.entry[0].changes[0].value.messages[0].from;
       let msg_body = body_param.entry[0].changes[0].value.messages[0].text.body;
 
