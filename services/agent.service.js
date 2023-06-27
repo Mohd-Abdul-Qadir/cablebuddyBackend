@@ -6,7 +6,7 @@ const bcrypt = require("bcryptjs");
 // Add Agent **************************************************************
 exports.AddAgent = async (req, res) => {
   try {
-    const { name, number, password } = req.body;
+    const { name, number, password, city, state, address } = req.body;
     if (!req.user) {
       return res.json({
         message: "Unauthorized request",
@@ -17,6 +17,9 @@ exports.AddAgent = async (req, res) => {
       number,
       password,
       userId: req.user.id,
+      city,
+      state,
+      address,
     });
 
     await newagent.save();
@@ -110,12 +113,12 @@ exports.getSingleAgent = async (req, res) => {
 // Update Agent ********************************************************************
 exports.updateAgent = async (req, res) => {
   const agentId = req.params.id;
-  const { name, number } = req.body;
+  const { name, number, city, state, address } = req.body;
 
   try {
     const updatedAgent = await Agent.findByIdAndUpdate(
       agentId,
-      { name, number },
+      { name, number, city, state, address },
       { new: true }
     );
 

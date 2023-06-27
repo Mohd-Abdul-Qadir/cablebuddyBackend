@@ -16,6 +16,15 @@ const agentSchema = new mongoose.Schema({
   area: {
     type: Array,
   },
+  city: {
+    type: String,
+  },
+  state: {
+    type: String,
+  },
+  address: {
+    type: String,
+  },
 });
 
 const Agent = mongoose.model("Agent", agentSchema);

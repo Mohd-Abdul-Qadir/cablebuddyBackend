@@ -7,6 +7,7 @@ const customer = require("../services/customer.service");
 const agent = require("../services/agent.service");
 const history = require("../services/histoy.service");
 const upload = require("../services/upload.service");
+const expenses = require("../services/expenses.service");
 const month = require("../services/monthly.service");
 require("../config/db");
 const verifyToken = require("../middlware/auth");
@@ -27,6 +28,7 @@ router.put(
   user.editUser
 );
 router.get("/user-dashboard", verifyToken, user.dashboardData);
+router.get("/single-user/:id", user.getUserById);
 
 //************Product api*************/
 router.post("/add-product", verifyToken, product.addProduct);
@@ -47,6 +49,16 @@ router.delete("/delete-customers/:id", customer.deleteCustomer);
 router.get("/customer-download", customer.downloadCustomer);
 router.get("/customer-monthly", customer.getCustomerMonthly);
 router.get("/customer-totalcustomer", customer.getTotalCustomers);
+router.put(
+  "/update-custormer-status/:id",
+  verifyToken,
+  customer.updateCustomerStatus
+);
+router.put(
+  "/update-customer-status-by-date/:id",
+  verifyToken,
+  customer.updateCUstomerStatusOnParticularDate
+);
 
 // *************Agent Api********************************************
 router.post("/add-agent", verifyToken, agent.AddAgent);
@@ -64,8 +76,13 @@ router.get("/balance-history/:id", history.getBalanceHistory);
 router.get("/balance-download", history.downloadBalanceSheet);
 router.get("/total-paid", history.getTotalPaid);
 router.get("/total-paid-online", history.getTotalPaidOnline);
+router.get("/single-bill/:id", history.getsingleBill);
 
 //****************************Monthly payment*****************************/
 router.get("/monthly", month.calculateTransactionAmountSum);
+
+//***************************Expenses*************************************/
+router.post("/add-expenses", verifyToken, expenses.addExpenses);
+router.get("/get-expenses", verifyToken, expenses.getExpenses);
 
 module.exports = router;
