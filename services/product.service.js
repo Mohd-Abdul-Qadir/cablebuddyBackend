@@ -5,8 +5,18 @@ const fs = require("fs");
 
 exports.addProduct = async (req, res) => {
   try {
-    const { name, price, select, gst, product, additional, hsn, genre, type } =
-      req.body;
+    const {
+      name,
+      price,
+      select,
+      gst,
+      product,
+      additional,
+      hsn,
+      genre,
+      type,
+      language,
+    } = req.body;
     if (!req.user) {
       return res.json({
         message: "Unauthorized request",
@@ -18,6 +28,7 @@ exports.addProduct = async (req, res) => {
       select,
       gst,
       product,
+      language,
       additional,
       hsn,
       genre,
@@ -77,13 +88,34 @@ exports.singleProduct = async (req, res) => {
 
 exports.updateProduct = async (req, res) => {
   const productId = req.params.id;
-  const { name, price, select, gst, product, additional, hsn, genre, type } =
-    req.body;
+  const {
+    name,
+    price,
+    select,
+    gst,
+    product,
+    additional,
+    hsn,
+    genre,
+    type,
+    language,
+  } = req.body;
 
   try {
     const updatedProduct = await Product.findByIdAndUpdate(
       productId,
-      { name, price, select, gst, product, additional, hsn, genre, type },
+      {
+        name,
+        price,
+        select,
+        gst,
+        product,
+        additional,
+        hsn,
+        genre,
+        type,
+        language,
+      },
       { new: true }
     );
 

@@ -1,6 +1,7 @@
 const BalanceHistory = require("../models/balanceHistory");
 const Customer = require("../models/customerSchema");
 const exceljs = require("exceljs");
+const schedule = require("node-schedule");
 const moment = require("moment");
 
 //Add customer ***************************************************************
@@ -347,6 +348,47 @@ exports.getTotalCustomers = async (req, res) => {
   try {
     const totalCustomers = await Customer.countDocuments();
     res.status(200).json({ totalCustomers });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.updateCUstomerStatusOnParticularDate = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { date, active } = req.body;
+    const t = new Date(date);
+    const now = new Date();
+    if (t <= now) {
+      await Customer.findByIdAndUpdate(id, {
+        active,
+      });
+    } else {
+      schedule.scheduleJob(t, async function () {
+        console.log("job is running", date, active, id);
+        await Customer.findByIdAndUpdate(id, {
+          active,
+        });
+        console.log("Status updated successfully");
+      });
+    }
+    res.status(200).json({ message: "Change status is scheduled." });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+//**********update customer status******** */
+exports.updateCustomerStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { active } = req.body;
+    await Customer.findByIdAndUpdate(id, {
+      active,
+    });
+    return res.status(200).json({ message: "Status updated successfully." });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });

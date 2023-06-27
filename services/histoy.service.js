@@ -68,6 +68,21 @@ exports.getTotalPaidOnline = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+//**************Get By id ***********************************************************/
+exports.getsingleBill = async (req, res) => {
+  try {
+    const bill = await BalanceHistory.findById(req.params.id);
+    if (!bill) {
+      return res.status(404).json({ message: "bill not found" });
+    }
+    res.status(200).json(bill);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 // ****************************Download List *****************************************/
 exports.downloadBalanceSheet = async (req, res) => {
   try {

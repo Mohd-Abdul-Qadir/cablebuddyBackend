@@ -31,6 +31,9 @@ const productSchema = new mongoose.Schema({
   type: {
     type: String,
   },
+  language: {
+    type: String,
+  },
   userId: {
     type: String,
   },
